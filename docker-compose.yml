@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  odoo:
+    build: .
+    container_name: odoo
+    ports:
+      - "8069:8069"
+    environment:
+      - DB_HOST=dpg-cvune8i4d50c73bjil3g-a.oregon-postgres.render.com
+      - DB_PORT=5432
+      - DB_USER=base_gr_user
+      - DB_PASSWORD=29U4FJ412tBDlzgy2KvDFr5EvEEwMti4
+      - DB_NAME=gr_db
+    depends_on:
+      - db
+    networks:
+      - odoo-network
+
+  db:
+    image: postgres:16
+    container_name: gr_db
+    environment:
+      - POSTGRES_USER=base_gr_user
+      - POSTGRES_PASSWORD=29U4FJ412tBDlzgy2KvDFr5EvEEwMti4
+      - POSTGRES_DB=gr_db
+    volumes:
+      - odoo_db_data:/var/lib/postgresql/data
+    networks:
+      - odoo-network
+
+networks:
+  odoo-network:
+    driver: bridge
+
+volumes:
+  odoo_db_data:
